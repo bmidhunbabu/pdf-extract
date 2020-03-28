@@ -5,28 +5,11 @@
 # Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
+
 from builtins import str
 
+from utils import FileHandler
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QFileDialog
-
-import os
-import re
-from math import radians, degrees
-
-import numpy as np
-import pandas as pd
-import cv2
-
-from pdftabextract import imgproc
-from pdftabextract.geom import pt
-from pdftabextract.common import read_xml, parse_pages, save_page_grids
-from pdftabextract.textboxes import rotate_textboxes, sorted_by_attr
-from pdftabextract.clustering import (find_clusters_1d_break_dist,
-                                      calc_cluster_centers_1d,
-                                      zip_clusters_and_values)
-from pdftabextract.splitpages import split_page_texts, create_split_pages_dict_structure
-from pdftabextract.extract import make_grid_from_positions, fit_texts_into_grid, datatable_to_dataframe
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -226,33 +209,21 @@ class Ui_Dialog(object):
         self.convertButton.setText(_translate("Dialog", "Convert"))
 
     def OpePdfFile(self):
-        filepath = self.openFileNameDialog()
+        try:
+            filepath = FileHandler.openFileNameDialog()
+        except Exception as e:
+            print(str(e))
         if(filepath != None):
             self.lineEdit.insert(filepath)
-            self.textEdit.append("Selected file " + filepath)
+            self.log("Selected file " + filepath)
             self.convertButton.setEnabled(True)
 
     def convertFile(self):
-        self.textEdit.append("Working on it...")
-        self.textEdit.append("Detecting table layouts...")
+        self.log("Working on it...")
+        self.log("Detecting table layouts...")
 
     def exportFile(self):
         pass
 
-    def openFileNameDialog(self):
-        print("opening file dialog")
-        file = None
-        try :
-            dialog = QFileDialog()
-            dialog.setFileMode(QFileDialog.AnyFile)
-            dialog.setViewMode(QFileDialog.Detail)
-            dialog.setNameFilter("PDF files (*.pdf)")
-            if dialog.exec_():
-                filenames = dialog.selectedFiles()
-                file = filenames[0]
-                print("Selected file : " + file)
-            else:
-                print("no file selected")
-        except Exception as e:
-            print(str(e))
-        return file
+    def log(self, messsage):
+        self.textEdit.append(messsage)

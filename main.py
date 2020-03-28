@@ -1,5 +1,5 @@
-from UiDialog import Ui_Dialog
-from PyQt5 import QtCore, QtGui, QtWidgets
+from UIComponents.UiDialog import Ui_Dialog
+from PyQt5 import QtWidgets
 
 if __name__ == "__main__":
     import sys
@@ -9,4 +9,3 @@ if __name__ == "__main__":
     ui.setupUi(Dialog)
     Dialog.show()
     sys.exit(app.exec_())
-
