@@ -208,22 +208,22 @@ class Ui_Dialog(object):
         self.exportButton.setText(_translate("Dialog", "Export"))
         self.convertButton.setText(_translate("Dialog", "Convert"))
 
-    def OpePdfFile(self):
-        try:
-            filepath = FileHandler.openFileNameDialog()
-        except Exception as e:
-            print(str(e))
-        if(filepath != None):
-            self.lineEdit.insert(filepath)
-            self.log("Selected file " + filepath)
-            self.convertButton.setEnabled(True)
-
-    def convertFile(self):
-        self.log("Working on it...")
-        self.log("Detecting table layouts...")
-
-    def exportFile(self):
-        pass
-
-    def log(self, messsage):
-        self.textEdit.append(messsage)
+    # def OpePdfFile(self):
+    #     try:
+    #         filepath = FileHandler.openFileNameDialog()
+    #     except Exception as e:
+    #         print(str(e))
+    #     if(filepath != None):
+    #         self.lineEdit.insert(filepath)
+    #         self.log("Selected file " + filepath)
+    #         self.convertButton.setEnabled(True)
+    #
+    # def convertFile(self):
+    #     self.log("Working on it...")
+    #     self.log("Detecting table layouts...")
+    #
+    # def exportFile(self):
+    #     pass
+    #
+    # def log(self, messsage):
+    #     self.textEdit.append(messsage)

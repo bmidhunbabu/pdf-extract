@@ -1,11 +1,11 @@
-from UIComponents.UiDialog import Ui_Dialog
+from UIComponents.MainWindo import MainWindow
 from PyQt5 import QtWidgets
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
+    ui = MainWindow()
     ui.setupUi(Dialog)
     Dialog.show()
     sys.exit(app.exec_())
