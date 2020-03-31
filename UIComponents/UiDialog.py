@@ -8,7 +8,6 @@
 
 from builtins import str
 
-from utils import FileHandler
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_Dialog(object):
@@ -194,10 +193,6 @@ class Ui_Dialog(object):
         self.convertButton.setEnabled(False)
         self.verticalLayout_2.addWidget(self.convertButton)
 
-        self.OpePdfFileButton.clicked.connect(self.OpePdfFile)
-        self.convertButton.clicked.connect(self.convertFile)
-        self.exportButton.clicked.connect(self.exportFile)
-
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
@@ -207,23 +202,3 @@ class Ui_Dialog(object):
         self.OpePdfFileButton.setText(_translate("Dialog", "Open PDF File"))
         self.exportButton.setText(_translate("Dialog", "Export"))
         self.convertButton.setText(_translate("Dialog", "Convert"))
-
-    # def OpePdfFile(self):
-    #     try:
-    #         filepath = FileHandler.openFileNameDialog()
-    #     except Exception as e:
-    #         print(str(e))
-    #     if(filepath != None):
-    #         self.lineEdit.insert(filepath)
-    #         self.log("Selected file " + filepath)
-    #         self.convertButton.setEnabled(True)
-    #
-    # def convertFile(self):
-    #     self.log("Working on it...")
-    #     self.log("Detecting table layouts...")
-    #
-    # def exportFile(self):
-    #     pass
-    #
-    # def log(self, messsage):
-    #     self.textEdit.append(messsage)

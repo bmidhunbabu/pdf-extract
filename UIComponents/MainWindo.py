@@ -1,38 +1,56 @@
-# MyApp.py
-# D. Thiebaut
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QObject, pyqtSlot
+import ntpath
+import time
+
 from UIComponents.UiDialog import Ui_Dialog
-import sys
-from utils import FileHandler
+from utils import converter
+from utils import helpers
+from utils.Extractor import Extractor
 
 
 class MainWindow(Ui_Dialog):
+    # Initialize the super class
     def __init__(self):
-        '''Initialize the super class
-        '''
         super().__init__()
 
+
+    # Setup the UI of the super class, and add here code
+    # that relates to the way we want our UI to operate.
     def setupUi(self, MW):
-        ''' Setup the UI of the super class, and add here code
-        that relates to the way we want our UI to operate.
-        '''
         super().setupUi(MW)
+        # connecting the slots
+        self.OpePdfFileButton.clicked.connect(self.OpePdfFile)
+        self.convertButton.clicked.connect(self.convertFile)
+        self.exportButton.clicked.connect(self.exportFile)
+
 
     def OpePdfFile(self):
         try:
-            filepath = FileHandler.openFileNameDialog()
+            filepath = helpers.openFileNameDialog()
+            if (filepath != None):
+                self.lineEdit.insert(filepath)
+                self.log("Selected file " + ntpath.basename(filepath))
+                self.convertButton.setEnabled(True)
         except Exception as e:
             print(str(e))
-        if (filepath != None):
-            self.lineEdit.insert(filepath)
-            self.log("Selected file " + filepath)
-            self.convertButton.setEnabled(True)
+
 
     def convertFile(self):
-        self.log("Working on it...")
-        self.log("Detecting table layouts...")
-
+        try:
+            self.log('Converting to XML...')
+            self.convertButton.setEnabled(False)
+            filepath = self.lineEdit.text()
+            time.sleep(2.4)
+            xml_file = converter.toXML(filepath)
+            if xml_file == False:
+                self.log('Could not convert to XML')
+                return False
+            self.log('Finished converting to XML')
+            self.log('XML saved to ' + ntpath.abspath(xml_file))
+            extractor = Extractor(xml_file)
+            extractor.parseXML()
+            self.convertButton.setEnabled(True)
+        except Exception as e:
+            print(str(e))
 
     def exportFile(self):
         pass
