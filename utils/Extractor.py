@@ -12,6 +12,7 @@ from pdftabextract import imgproc
 from pdftabextract.common import ROTATION, SKEW_X, SKEW_Y
 from pdftabextract.geom import pt
 from pdftabextract.textboxes import rotate_textboxes, deskew_textboxes
+from pdftabextract.clustering import find_clusters_1d_break_dist
 
 from utils import helpers
 
@@ -37,9 +38,9 @@ class Extractor:
 
     def parseXML(self):
         # Load the XML that was generated with pdftohtml
-        xmltree, xmlroot = read_xml(self.filepath_rel)
+        self.xmltree, self.xmlroot = read_xml(self.filepath_rel)
         # parse it and generate a dict of pages
-        pages = parse_pages(xmlroot)
+        pages = parse_pages(self.xmlroot)
         self.tedit.append('parssing XML file...')
         p_num = 3
         page = pages[p_num]
@@ -100,3 +101,11 @@ class Extractor:
             # rotate back or deskew detected lines
             lines_hough = iproc_obj.apply_found_rotation_or_skew(rot_or_skew_type, -rot_or_skew_radians)
             self.save_image_w_lines(iproc_obj, imgfilebasename + '-repaired')
+
+        # save repaired XML (i.e. XML with deskewed textbox positions)
+        output_files_basename = self.file[:self.file.rindex('.')]
+        repaired_xmlfile = os.path.join(self.OUTPUT_PATH, output_files_basename + '.repaired.xml')
+
+        print("saving repaired XML file to '%s'..." % repaired_xmlfile)
+        self.tedit.append("saving modified XML file to '%s'..." % ntpath.abspath(repaired_xmlfile))
+        self.xmltree.write(repaired_xmlfile)
