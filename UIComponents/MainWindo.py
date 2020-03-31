@@ -27,7 +27,9 @@ class MainWindow(Ui_Dialog):
         try:
             filepath = helpers.openFileNameDialog()
             if (filepath != None):
+                self.lineEdit.clear()
                 self.lineEdit.insert(filepath)
+                self.textEdit.clear()
                 self.log("Selected file " + ntpath.basename(filepath))
                 self.convertButton.setEnabled(True)
         except Exception as e:
