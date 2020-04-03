@@ -160,7 +160,7 @@ class Ui_Dialog(object):
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.textEdit = QtWidgets.QTextEdit(self.horizontalLayoutWidget)
-        self.textEdit.setEnabled(False)
+        self.textEdit.setReadOnly(True)
         self.textEdit.setObjectName("textEdit")
         self.horizontalLayout.addWidget(self.textEdit)
         self.horizontalLayoutWidget_2 = QtWidgets.QWidget(Dialog)
