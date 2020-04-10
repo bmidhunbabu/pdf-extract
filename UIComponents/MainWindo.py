@@ -1,13 +1,19 @@
 import ntpath
 import time
 
-from UIComponents.UiDialog import Ui_Dialog
+from UIComponents.UiDialog import Ui_MainWindow
 from utils import converter
 from utils import helpers
-from utils.Extractor import Extractor
+from tools.Extractor import Extractor
+
+from PyQt5.QtWidgets import QGraphicsDropShadowEffect
+from PyQt5.QtGui import QColor
 
 
-class MainWindow(Ui_Dialog):
+class MainWindow(Ui_MainWindow):
+    #initialize the variables
+    stylesheet = open("UIComponents/Styles/basics.css").read()
+
     # Initialize the super class
     def __init__(self):
         super().__init__()
@@ -15,8 +21,19 @@ class MainWindow(Ui_Dialog):
 
     # Setup the UI of the super class, and add here code
     # that relates to the way we want our UI to operate.
-    def setupUi(self, MW):
-        super().setupUi(MW)
+    def setupUi(self, MainWindow):
+        super().setupUi(MainWindow)
+        MainWindow.setWindowTitle("PDF Extract")
+
+        # self.stylesheet = self.get_stylesheet()
+        print(self.stylesheet)
+        MainWindow.setStyleSheet(self.stylesheet)
+
+        self.textEdit.setReadOnly(True)
+        self.convertButton.setEnabled(False)
+        self.exportButton.setEnabled(False)
+        self.comboBox.setEnabled(False)
+
         # connecting the slots
         self.OpePdfFileButton.clicked.connect(self.OpePdfFile)
         self.convertButton.clicked.connect(self.convertFile)
@@ -41,7 +58,6 @@ class MainWindow(Ui_Dialog):
             self.log('Converting to XML...')
             self.convertButton.setEnabled(False)
             filepath = self.lineEdit.text()
-            time.sleep(2.4)
             xml_file = converter.toXML(filepath)
             if xml_file == False:
                 self.log('Could not convert to XML')
@@ -60,3 +76,6 @@ class MainWindow(Ui_Dialog):
 
     def log(self, messsage):
         self.textEdit.append(messsage)
+        self.statusbar.showMessage(messsage)
+
+

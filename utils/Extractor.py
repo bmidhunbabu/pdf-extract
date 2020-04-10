@@ -27,8 +27,11 @@ class Extractor:
         pages = parse_pages(self.xmlroot)
         self.tedit.append('parssing XML file...')
         p_num = 3
-        page = pages[p_num]
         # self.save_page_as_image(page, p_num)
-        page = PageExtractor(page, p_num, self.file, self.OUTPUT_PATH, self.xmltree)
+        page = PageExtractor(pages[p_num], p_num, self.file, self.OUTPUT_PATH, self.xmltree)
         page.save_page_as_image()
         page.find_skew_rotation()
+        page.find_vertical_clusters()
+        page.find_horizontal_clusters()
+        page.find_header_and_footer()
+        page.to_grid()

@@ -2,14 +2,14 @@ import typing
 import sys
 import os
 
-from PyQt5.QtWidgets import QApplication, QDialog, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PyQt5.QtCore import QDir
 
-def getMainWindow() -> typing.Union[QDialog, None]:
+def getMainWindow() -> typing.Union[QMainWindow, None]:
     # Global function to find the (open) QMainWindow in application
     app = QApplication.instance()
     for widget in app.topLevelWidgets():
-        if isinstance(widget, QDialog):
+        if isinstance(widget, QMainWindow):
             return widget
     return None
 
