@@ -26,7 +26,7 @@ DATAPATH = 'data/'
 N_COLS = 15                      # number of columns
 HEADER_ROW_HEIGHT = 90          # space between the two header row horizontal lines in pixels, measured in the scanned pages
 MIN_ROW_GAP = 80                # minimum space between two rows in pixels, measured in the scanned pages
-MIN_COL_WIDTH = 60             # minimum space between two columns in pixels, measured in the scanned pages
+MIN_COL_WIDTH = 410             # minimum space between two columns in pixels, measured in the scanned pages
 SMALLTEXTS_WIDTH = 15           # maximum width of text boxes that are considered "small" and will be excluded from column
                                 # detection because they distort the column recognition
 CORRECT_COLS_MIN_DIFFSUM = 10   # minimum summed deviation from the "ideal" median column positions threshold, from
@@ -161,50 +161,30 @@ class Extractor:
                     # self.save_image_w_lines(iproc_obj, imgfilebasename + '-repaired', False)
                     self.save_image_w_lines(iproc_obj, imgfilebasename + '-repaired', True)
 
-                # save split and repaired XML (i.e. XML with deskewed textbox positions)
-                output_files_basename = self.INPUT_XML[:self.INPUT_XML.rindex('.')]
-                repaired_xmlfile = os.path.join(self.OUTPUT_DIR, output_files_basename + '.repaired.xml')
-
-                self.log("saving repaired XML file to '%s'..." % repaired_xmlfile)
-                xmltree.write(repaired_xmlfile)
-
                 # cluster the detected *horizontal* lines using find_clusters_1d_break_dist as simple clustering function
                 # (break on distance HEADER_ROW_HEIGHT/2)
                 # this is only to find out the header row later
-                # hori_clusters = iproc_obj.find_clusters(imgproc.DIRECTION_HORIZONTAL, find_clusters_1d_break_dist,
-                #                                         dist_thresh=HEADER_ROW_HEIGHT / 2)
-                # self.log("found %d clusters" % len(hori_clusters))
-                #
-                # if len(hori_clusters) > 0:
-                #     # draw the clusters
-                #     img_w_clusters = iproc_obj.draw_line_clusters(imgproc.DIRECTION_HORIZONTAL, hori_clusters)
-                #     save_img_file = os.path.join(self.OUTPUT_DIR, '%s-hori-clusters.png' % imgfilebasename)
-                #     self.log("saving image with detected horizontal clusters to '%s'" % save_img_file)
-                #     cv2.imwrite(save_img_file, img_w_clusters)
-                #
-                #     hori_lines_clusters[p_num] = hori_clusters
-                # else:
-                #     self.log("no horizontal line clusters found")
+                hori_clusters = iproc_obj.find_clusters(imgproc.DIRECTION_HORIZONTAL, find_clusters_1d_break_dist,
+                                                        dist_thresh=HEADER_ROW_HEIGHT / 2)
+                self.log("found %d clusters" % len(hori_clusters))
 
-                scaling_x, scaling_y = pages_image_scaling[p_num]
-                print(p['texts'])
-                vertical_clusters = iproc_obj.find_clusters(imgproc.DIRECTION_VERTICAL,
-                                                                 find_clusters_1d_break_dist,
-                                                                 # the positions are in "scanned image space" -> we scale them to "text box space"
-                                                                 dist_thresh=MIN_COL_WIDTH / 2)
-                self.log("EDIT : found %d vertical clusters" % len(vertical_clusters))
+                if len(hori_clusters) > 0:
+                    # draw the clusters
+                    img_w_clusters = iproc_obj.draw_line_clusters(imgproc.DIRECTION_HORIZONTAL, hori_clusters)
+                    save_img_file = os.path.join(self.OUTPUT_DIR, '%s-hori-clusters.png' % imgfilebasename)
+                    self.log("saving image with detected horizontal clusters to '%s'" % save_img_file)
+                    cv2.imwrite(save_img_file, img_w_clusters)
 
-                # draw the clusters
-                img_with_clusters = iproc_obj.draw_line_clusters(imgproc.DIRECTION_VERTICAL, vertical_clusters)
-                save_img_file = os.path.join(self.OUTPUT_DIR,
-                                             '%s-vertical-clusters.png' % imgfilebasename)
-                self.log("EDIT : saving image with detected vertical clusters to '%s'" % save_img_file)
-                cv2.imwrite(save_img_file, img_with_clusters)
+                    hori_lines_clusters[p_num] = hori_clusters
+                else:
+                    self.log("no horizontal line clusters found")
 
-                self.page_col_pos = np.array(calc_cluster_centers_1d(vertical_clusters)) / scaling_x
-                self.log('found %d column borders:' % len(self.page_col_pos))
-                self.log(self.page_col_pos)
+            # save split and repaired XML (i.e. XML with deskewed textbox positions)
+            output_files_basename = self.INPUT_XML[:self.INPUT_XML.rindex('.')]
+            repaired_xmlfile = os.path.join(self.OUTPUT_DIR, output_files_basename + '.repaired.xml')
 
+            self.log("saving split and repaired XML file to '%s'..." % repaired_xmlfile)
+            xmltree.write(repaired_xmlfile)
 
             # %% Determine the rows and columns of the tables
 

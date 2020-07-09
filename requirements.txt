@@ -9,3 +9,12 @@ sip==4.19.8
 six==1.14.0
 typed-ast==1.4.1
 wrapt==1.11.2
+
+numpy~=1.18.2
+pandas~=1.0.3
+opencv-python~=4.2.0.32
+pdftabextract~=0.3.0
+matplotlib~=3.2.1
+image==1.5.30
+pytesseract==0.3.3
+pillow==7.1.1
